@@ -1,3 +1,19 @@
+// llc is a compiler for a toy language
+// Copyright (C) 2014  Logan Romantic
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <cctype>
 #include <cstdio>
 #include <string>
@@ -93,10 +109,10 @@ namespace llc
             token.type = TokenType::Eof;
             token.value = "";
         }
-		else if (char_ == '/')
-		{
-			ScanComment(token);
-		}
+        else if (char_ == '/')
+        {
+            ScanComment(token);
+        }
         else if (std::isalpha(char_))
         {
             ScanIdentifier(token);
@@ -111,10 +127,10 @@ namespace llc
         }
         else 
         {
-			ScanSymbol(token);
+            ScanSymbol(token);
         }
 
-		return token;
+        return token;
     }
 
     void Scanner::NextChar()
@@ -255,131 +271,131 @@ namespace llc
         token.value = ss.str();
     }
 
-	void Scanner::ScanSymbol(Token& token)
-	{
-		char c;
-		switch (char_)
-		{
-		case ';':
-			token.type = TokenType::SemiColon;
-			token.value = ";";
-			break;
-		case ',':
-			token.type = TokenType::Comma;
-			token.value = ";";
-			break;
-		case '(':
-			token.type = TokenType::Lparen;
-			token.value = "(";
-			break;
-		case ')':
-			token.type = TokenType::Rparen;
-			token.value = ")";
-			break;
-		case '[':
-			token.type = TokenType::Lbracket;
-			token.value = "[";
-			break;
-		case ']':
-			token.type = TokenType::Rbracket;
-			token.value = "]";
-			break;
-		case ':':
-			c = Peek();
-			if (c == '=')
-			{
-				NextChar();
-				token.type = TokenType::Assign;
-				token.value = ":=";
-			}
-			else
-			{
-				std::string message = hGenerateUnexpected(c);
-				warnings_.push_back(std::make_shared<Warning>(message, token.coord));
-			}
-			break;
-		case '|':
-			token.type = TokenType::Or;
-			token.value = "|";
-			break;
-		case '&':
-			token.type = TokenType::And;
-			token.value = "&";
-			break;
-		case '+':
-			token.type = TokenType::Add;
-			token.value = "+";
-			break;
-		case '-':
-			token.type = TokenType::Sub;
-			token.value = "-";
-			break;
-		case '*':
-			token.type = TokenType::Mul;
-			token.value = "*";
-			break;
-		case '/':
-			token.type = TokenType::Div;
-			token.value = "/";
-			break;
-		case '<':
-			if (Peek() == '=')
-			{
-				NextChar();
-				token.type = TokenType::LessEql;
-				token.value = "<=";
-			}
-			else
-			{
-				token.type = TokenType::Less;
-				token.value = "<";
-			}
-			break;
-		case '>':
-			if (Peek() == '=')
-			{
-				NextChar();
-				token.type = TokenType::GreaterEql;
-				token.value = ">=";
-			}
-			else
-			{
-				token.type = TokenType::Greater;
-				token.value = ">";
-			}
-			break;
-		case '=':
-			c = Peek();
-			if (c == '=')
-			{
-				NextChar();
-				token.type = TokenType::Eql;
-				token.value = "==";
-			}
-			else
-			{
-				std::string message = hGenerateUnexpected(c);
-				warnings_.push_back(std::make_shared<Warning>(message, token.coord));
-			}
-			break;
-		case '!':
-			c = Peek();
-			if (c == '=')
-			{
-				NextChar();
-				token.type = TokenType::Neq;
-				token.value = "!=";
-			}
-			else
-			{
-				std::string message = hGenerateUnexpected(c);
-				warnings_.push_back(std::make_shared<Warning>(message, token.coord));
-			}
-			break;
-		default:
-			std::string message = hGenerateUnexpected(char_);
-			warnings_.push_back(std::make_shared<Warning>(message, token.coord));
-		}
-		NextChar();
-	}
+    void Scanner::ScanSymbol(Token& token)
+    {
+        char c;
+        switch (char_)
+        {
+        case ';':
+            token.type = TokenType::SemiColon;
+            token.value = ";";
+            break;
+        case ',':
+            token.type = TokenType::Comma;
+            token.value = ";";
+            break;
+        case '(':
+            token.type = TokenType::Lparen;
+            token.value = "(";
+            break;
+        case ')':
+            token.type = TokenType::Rparen;
+            token.value = ")";
+            break;
+        case '[':
+            token.type = TokenType::Lbracket;
+            token.value = "[";
+            break;
+        case ']':
+            token.type = TokenType::Rbracket;
+            token.value = "]";
+            break;
+        case ':':
+            c = Peek();
+            if (c == '=')
+            {
+                NextChar();
+                token.type = TokenType::Assign;
+                token.value = ":=";
+            }
+            else
+            {
+                std::string message = hGenerateUnexpected(c);
+                warnings_.push_back(std::make_shared<Warning>(message, token.coord));
+            }
+            break;
+        case '|':
+            token.type = TokenType::Or;
+            token.value = "|";
+            break;
+        case '&':
+            token.type = TokenType::And;
+            token.value = "&";
+            break;
+        case '+':
+            token.type = TokenType::Add;
+            token.value = "+";
+            break;
+        case '-':
+            token.type = TokenType::Sub;
+            token.value = "-";
+            break;
+        case '*':
+            token.type = TokenType::Mul;
+            token.value = "*";
+            break;
+        case '/':
+            token.type = TokenType::Div;
+            token.value = "/";
+            break;
+        case '<':
+            if (Peek() == '=')
+            {
+                NextChar();
+                token.type = TokenType::LessEql;
+                token.value = "<=";
+            }
+            else
+            {
+                token.type = TokenType::Less;
+                token.value = "<";
+            }
+            break;
+        case '>':
+            if (Peek() == '=')
+            {
+                NextChar();
+                token.type = TokenType::GreaterEql;
+                token.value = ">=";
+            }
+            else
+            {
+                token.type = TokenType::Greater;
+                token.value = ">";
+            }
+            break;
+        case '=':
+            c = Peek();
+            if (c == '=')
+            {
+                NextChar();
+                token.type = TokenType::Eql;
+                token.value = "==";
+            }
+            else
+            {
+                std::string message = hGenerateUnexpected(c);
+                warnings_.push_back(std::make_shared<Warning>(message, token.coord));
+            }
+            break;
+        case '!':
+            c = Peek();
+            if (c == '=')
+            {
+                NextChar();
+                token.type = TokenType::Neq;
+                token.value = "!=";
+            }
+            else
+            {
+                std::string message = hGenerateUnexpected(c);
+                warnings_.push_back(std::make_shared<Warning>(message, token.coord));
+            }
+            break;
+        default:
+            std::string message = hGenerateUnexpected(char_);
+            warnings_.push_back(std::make_shared<Warning>(message, token.coord));
+        }
+        NextChar();
+    }
 }
