@@ -14,97 +14,101 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#ifndef COMPILER_TOKENS_H_
-#define COMPILER_TOKENS_H_
+#ifndef LLC_TOKENS_H_
+#define LLC_TOKENS_H_
 
 #include <cstdint>
 
 namespace llc
 {
-    enum class TokenType : std::int8_t;
+enum class TokenType : std::int8_t;
 
-    struct Coord 
-    {
-        Coord() : line(-1), column(-1) {}
-        Coord(int line_, int column_) : line(line_), column(column_) {}
-        std::string String();
+struct Coord
+{
+    Coord() : line(-1), column(-1) {}
+    Coord(int line_, int column_) : line(line_), column(column_) {}
 
-        int line;
-        int column;
-    };
+    std::string String() const;
+    friend std::ostream& operator<<(std::ostream& os, const Coord& coord);
 
-    class Token
-    {
-    public:
-        Token();
-        Token(TokenType token_type, std::string value, Coord coord);
-        ~Token();
+    int line;
+    int column;
+};
 
-        static TokenType LookupIdentifier(const std::string& value);
-        std::string GetName() const;
+class Token
+{
+public:
+    Token();
+    Token(TokenType token_type, std::string value, Coord coord);
+    ~Token();
 
-        TokenType type;
-        std::string value;
-        Coord coord;
-    };
+    static TokenType LookupIdentifier(const std::string& value);
+    static std::string GetName(TokenType type);
 
-    enum class TokenType : std::int8_t 
-    {
-        //Special
-        Illegal,
-        Eof,
-        Comment,
+    friend std::ostream& operator<<(std::ostream& os, const Token& token);
 
-        //Literals
-        Identifier,
-        Integer,
-        Float,
-        Bool,
-        String,
+    TokenType type;
+    std::string value;
+    Coord coord;
+};
 
-        //Symbols
-        SemiColon,
-        Comma,
-        Lparen,
-        Rparen,
-        Lbracket,
-        Rbracket,
-        Assign,
-        Or,
-        And,
-        Add,
-        Sub,
-        Mul,
-        Div,
-        Less,
-        Greater,
-        LessEql,
-        GreaterEql,
-        Eql,
-        Neq,
+enum class TokenType : std::int8_t
+{
+    //Special
+    Illegal,
+    Eof,
+    Comment,
 
-        //Keywords
-        Program,
-        Is,
-        Begin,
-        End,
-        Global,
-        Procedure,
-        In,
-        Out,
-        IntegerType,
-        FloatType,
-        BoolType,
-        StringType,
-        If,
-        Then,
-        Else,
-        For,
-        Return,
-        Not,
-        TrueKey,
-        FalseKey,
-    };
+    //Literals
+    Identifier,
+    Integer,
+    Float,
+    Bool,
+    String,
+
+    //Symbols
+    SemiColon,
+    Comma,
+    Lparen,
+    Rparen,
+    Lbracket,
+    Rbracket,
+    Assign,
+    Or,
+    And,
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Less,
+    Greater,
+    LessEql,
+    GreaterEql,
+    Eql,
+    Neq,
+
+    //Keywords
+    Program,
+    Is,
+    Begin,
+    End,
+    Global,
+    Procedure,
+    In,
+    Out,
+    IntegerType,
+    FloatType,
+    BoolType,
+    StringType,
+    If,
+    Then,
+    Else,
+    For,
+    Return,
+    Not,
+    TrueKey,
+    FalseKey,
+};
 
 }
 

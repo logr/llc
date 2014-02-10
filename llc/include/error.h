@@ -14,28 +14,57 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#include <iostream>
+#ifndef LLC_ERROR_H_
+#define LLC_ERROR_H_
+
 #include <string>
-#include "error.h"
-#include "parser.h"
+#include "token.h"
 
-int main(int argc, char* argv[])
+namespace llc
 {
-    if (argc < 2)
+class Warning
+{
+public:
+    Warning(std::string message, Coord coord) : message_(message), coord_(coord)
+    { }
+
+    ~Warning()
+    { }
+
+    friend std::ostream& operator<<(std::ostream& os, const Warning& warning)
     {
-        std::cerr << "Expecting input file";
-        exit(-1);
+        os << warning.message_ << " " << warning.coord_;
+        return os;
     }
 
-    llc::Parser parser(argv[1]);
-    std::cout << "Parsing " << argv[1] << std::endl;
+    std::string message() const
+    {
+        return message_;
+    }
+    Coord coord() const
+    {
+        return coord_;
+    }
 
-    try
+private:
+    std::string message_;
+    Coord coord_;
+};
+
+class Error : public std::exception, public Warning
+{
+public:
+    Error(const std::string& message, Coord coord) : Warning(message, coord)
+    { }
+
+    ~Error() throw()
+    { }
+
+    virtual const char* what() const throw()
     {
-        parser.Parse();
+        return message().c_str();
     }
-    catch ( llc::Error e)
-    {
-        std::cout << e << std::endl;
-    }
+};
 }
+
+#endif

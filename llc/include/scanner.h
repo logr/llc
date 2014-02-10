@@ -14,73 +14,63 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#ifndef COMPILER_SCANNER_H_
-#define COMPILER_SCANNER_H_
+#ifndef LLC_SCANNER_H_
+#define LLC_SCANNER_H_
 
 #include <vector>
 #include <memory>
-#include "token.h"
+#include "error.h"
 
 namespace llc
 {
-    class Warning; 
-    class Error;
+class Token;
+struct Coord;
 
-    typedef std::vector<std::shared_ptr<Warning>> warnings_vector;
-    typedef std::vector<std::shared_ptr<Error>> errors_vector;
+typedef std::vector<std::shared_ptr<Warning>> warnings_vector;
 
-    class Scanner
+class Scanner
+{
+public:
+    Scanner(const std::string& filepath = "");
+    ~Scanner();
+
+    std::unique_ptr<Token> Scan();
+    void AttachFile(const std::string& filepath);
+
+    int line() const
     {
-    public:
-        Scanner();
-        Scanner(std::string filepath);
-        
-        ~Scanner();
-
-        Token Scan();
-        void AttachFile(std::string filepath);
-
-        int line() const { return line_; }
-        int column() const { return column_; }
-        bool has_errors() const { return has_errors_; }
-        warnings_vector warnings() const { return warnings_; };
-
-    private:
-        void NextChar();
-        char Peek();
-        void FreezePosition(Coord& coord);
-        void SkipWhitespace();
-        void ScanComment(Token& token);
-        void ScanIdentifier(Token& token);
-        void ScanNumberPart(std::ostringstream& ss);
-        void ScanNumber(Token& token);
-        void ScanString(Token& token);
-		void ScanSymbol(Token& token);
-
-        void Init();
-
-        char char_;
-        bool has_errors_;
-        unsigned int offset_;
-        int line_;
-        int column_;
-        std::vector<char> input_;
-        warnings_vector warnings_;
+        return line_;
+    }
+    int column() const
+    {
+        return column_;
+    }
+    warnings_vector warnings() const
+    {
+        return warnings_;
     };
 
-    class Warning
-    {
-    public:
-        Warning(std::string message, Coord coord);
-        ~Warning();
+private:
+    void NextChar();
+    char Peek();
+    void FreezePosition(Coord& coord);
+    void SkipWhitespace();
+    void ScanComment(const std::unique_ptr<Token>& token);
+    void ScanIdentifier(const std::unique_ptr<Token>& token);
+    void ScanNumberPart(std::ostringstream& ss);
+    void ScanNumber(const std::unique_ptr<Token>& token);
+    void ScanString(const std::unique_ptr<Token>& token);
+    void ScanSymbol(const std::unique_ptr<Token>& token);
 
-        std::string message() const { return message_; }
-        Coord coord() const { return coord_; }
+    void Init();
 
-    private:
-        std::string message_;
-        Coord coord_;
-    };
+    char char_;
+    unsigned int offset_;
+    int line_;
+    int column_;
+    std::vector<char> input_;
+    warnings_vector warnings_;
+};
 }
 
 #endif

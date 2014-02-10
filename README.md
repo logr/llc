@@ -5,7 +5,9 @@ A compiler for a toy language. Uses a LL(1), recursive descent parser.
 
 Compiling
 ---
-Run `make`, and if that failed, `make -std=c++11`
+Requires a C++11 compiler. 
+
+Run `make` or `make STD=c++11`
 
 Running
 ---
